@@ -116,6 +116,8 @@ const api = {
       name: string;
       dataType: MetricsDataType;
     }[],
+    page = 0,
+    limit = 20,
   ) {
     return useQuery<
       {
@@ -128,14 +130,18 @@ const api = {
       Error
     >({
       refetchOnWindowFocus: false,
-      queryKey: ['metrics/tags', metrics],
+      queryKey: ['metrics/tags', metrics, page, limit],
       queryFn: () =>
-        server('metrics/tags', {
-          method: 'POST',
-          json: {
-            metrics,
+        server(
+          'metrics/tags' +
+            (limit !== undefined ? `?page=${page}&limit=${limit}` : ''),
+          {
+            method: 'POST',
+            json: {
+              metrics,
+            },
           },
-        }).json(),
+        ).json(),
     });
   },
   useMetricsChart(
