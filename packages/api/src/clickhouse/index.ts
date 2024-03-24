@@ -599,10 +599,14 @@ export const getMetricsTagsDEPRECATED = async ({
   teamId,
   startTime,
   endTime,
+  limit = 20,
+  offset = 0,
 }: {
   teamId: string;
   startTime: number; // unix in ms
   endTime: number; // unix in ms
+  limit?: number;
+  offset?: number;
 }) => {
   const tableName = `default.${TableName.Metric}`;
   // TODO: remove 'data_type' in the name field
@@ -619,10 +623,13 @@ export const getMetricsTagsDEPRECATED = async ({
         WHERE (?)
         GROUP BY name, data_type
         ORDER BY name
+        LIMIT ? OFFSET ?
     `,
     [
       tableName,
       SqlString.raw(SearchQueryBuilder.timestampInBetween(startTime, endTime)),
+      limit,
+      offset,
     ],
   );
   const ts = Date.now();

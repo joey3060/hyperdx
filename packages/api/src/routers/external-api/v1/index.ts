@@ -204,6 +204,8 @@ router.get(
             startTime: nowInMs - ms('5d'),
             endTime: nowInMs,
             teamId: teamId.toString(),
+            limit: req.query.limit as number | undefined,
+            offset: req.query.offset as number | undefined,
           }),
         result => {
           if (result.rows != null) {
