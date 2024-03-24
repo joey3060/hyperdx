@@ -723,6 +723,8 @@ export const getMetricsTags = async ({
   metrics,
   startTime,
   teamId,
+  limit = 20,
+  page = 0,
 }: {
   endTime: number; // unix in ms
   metrics: {
@@ -731,6 +733,8 @@ export const getMetricsTags = async ({
   }[];
   startTime: number; // unix in ms
   teamId: string;
+  limit?: number;
+  page?: number;
 }) => {
   const tableName = `default.${TableName.Metric}`;
   // TODO: theoretically, we should be able to traverse each tag's keys and values
@@ -749,6 +753,7 @@ export const getMetricsTags = async ({
       AND (_timestamp_sort_key >= ? AND _timestamp_sort_key < ?)
       AND (_created_at >= fromUnixTimestamp64Milli(?) AND _created_at < fromUnixTimestamp64Milli(?))
       GROUP BY name, data_type
+      LIMIT ? OFFSET ?
     `,
         [
           tableName,
@@ -758,6 +763,8 @@ export const getMetricsTags = async ({
           msToBigIntNs(endTime),
           startTime,
           endTime,
+          Number(limit),
+          Number(page * limit),
         ],
       ),
     )

@@ -75,6 +75,8 @@ router.post(
           startTime: nowInMs - ms('5d'),
           endTime: nowInMs,
           teamId: teamId.toString(),
+          page: req.query.page as number | undefined,
+          limit: req.query.limit as number | undefined,
         }),
       );
     } catch (e) {
