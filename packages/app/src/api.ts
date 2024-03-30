@@ -536,13 +536,15 @@ const api = {
       Error,
       {
         id: string;
+        name?: string;
         query?: string;
         tags?: string[];
       }
-    >(`log-views`, async ({ id, query, tags }) =>
+    >(`log-views`, async ({ id, name, query, tags }) =>
       server(`log-views/${id}`, {
         method: 'PATCH',
         json: {
+          name,
           query,
           tags,
         },
